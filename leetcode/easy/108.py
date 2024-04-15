@@ -4,6 +4,22 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
+
+
+# 2
+class Solution:
+    def sortedArrayToBST(self, nums: List[int]) -> Optional[TreeNode]:
+        if len(nums) == 0:
+            return
+        
+        index = len(nums) // 2
+        mid = TreeNode(val=nums[index])
+        mid.left = self.sortedArrayToBST(nums[:index])
+        mid.right = self.sortedArrayToBST(nums[index+1:])
+        return mid
+
+
+# 1
 class Solution:
     def sortedArrayToBST(self, nums: List[int]) -> Optional[TreeNode]:
         if len(nums) == 1:
@@ -17,4 +33,4 @@ class Solution:
         mid = TreeNode(val=nums[index])
         mid.left = self.sortedArrayToBST(nums[:index])
         mid.right = self.sortedArrayToBST(nums[index+1:])
-        return mid        
+        return mid
