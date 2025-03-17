@@ -1,12 +1,11 @@
 from typing import List
+from collections import defaultdict
 
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-        result = []
         if len(strs) == 1:
-            result.append(strs)
-            return result
-        
+            return [strs]
+        anagram_map = defaultdict(list)
         hash_map = {}
         curr_index = 0
         while curr_index < len(strs):
@@ -22,10 +21,7 @@ class Solution:
 
             curr_index += 1
 
-        for anagram in hash_map.values():
-            result.append(anagram)
-
-        return result
+        return list(hash_map.values())
 
 strs = ["eat","tea","tan","ate","nat","bat"]
 strs = [""]
