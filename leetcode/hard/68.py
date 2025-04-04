@@ -1,4 +1,6 @@
 from typing import List
+
+# TODO: Refactor to be more Pythonic
 class Solution:
     def fullJustify(self, words: List[str], maxWidth: int) -> List[str]:
 
