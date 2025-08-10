@@ -35,3 +35,31 @@ AverageRate as (
 select name as results from CountRate
 union all
 select title as results from AverageRate
+
+-- best
+(SELECT 
+    u.name AS results
+ FROM 
+    Users u
+ JOIN 
+    MovieRating mr USING (user_id)
+ GROUP BY 
+    u.user_id, u.name
+ ORDER BY 
+    COUNT(*) DESC, u.name ASC
+ LIMIT 1)
+UNION ALL
+(SELECT 
+    m.title AS results
+ FROM 
+    Movies m
+ JOIN 
+    MovieRating mr USING (movie_id)
+ WHERE 
+    EXTRACT(YEAR FROM mr.created_at) = 2020 
+    AND EXTRACT(MONTH FROM mr.created_at) = 2
+ GROUP BY 
+    m.movie_id, m.title
+ ORDER BY 
+    AVG(mr.rating) DESC, m.title ASC
+ LIMIT 1);
