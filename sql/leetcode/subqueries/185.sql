@@ -1,3 +1,26 @@
+-- latest ans1
+-- Write your PostgreSQL query statement below
+
+
+
+select
+    d.name as Department,
+    r.name as Employee,
+    r.salary as Salary
+from Department d
+right join (
+    select
+        departmentId,
+        name,
+        salary,
+        DENSE_RANK() over (partition by departmentId order by salary desc) as rank
+    from Employee
+) r
+on d.id = r.departmentId
+where r.rank < 4
+order by Department, Salary desc
+
+-- old ans
 WITH ranked_employees AS (
     SELECT d.name AS department,
            e.name AS employee,
