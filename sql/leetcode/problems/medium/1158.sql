@@ -7,7 +7,7 @@ from(
     select
     u.user_id as buyer_id,
     u.join_date,
-    case when extract(year from order_date) = '2019' then 1 else 0 end as orders_in_2019
+    case when extract(year from order_date) = 2019 then 1 else 0 end as orders_in_2019
 from Users u
 left join Orders o
 on o.buyer_id = u.user_id
