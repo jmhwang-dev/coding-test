@@ -7,7 +7,7 @@ left join Transactions using (visit_id)
 group by customer_id
 having count(*) - count(transaction_id) > 0;
 
--- ans2
+-- ans2 *
 select
     customer_id,
     count(*) AS count_no_trans 
