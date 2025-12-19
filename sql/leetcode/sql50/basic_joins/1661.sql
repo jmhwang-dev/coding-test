@@ -22,7 +22,7 @@ FROM (
 GROUP BY 
     machine_id;
 
--- ans2
+-- ans2*
 select s.machine_id, round(avg(e.timestamp - s.timestamp)::numeric, 3) as processing_time
 from Activity s
 join Activity e
