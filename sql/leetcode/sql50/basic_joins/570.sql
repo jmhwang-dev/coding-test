@@ -41,6 +41,17 @@ FROM employee_count_by_manager em
 JOIN Employee e
 ON em.managerId = e.id;
 
+-- ans3
+select e.name
+from Employee e
+join (
+    select managerId
+    from Employee
+    group by managerId
+    having count(managerId) > 4
+) target_m
+on e.id = target_m.managerId
+
 -- best
 WITH manager_counts AS (
     SELECT 
