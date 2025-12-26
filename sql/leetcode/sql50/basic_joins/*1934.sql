@@ -1,4 +1,4 @@
--- Write your PostgreSQL query statement below
+-- ans1
 with
 all_log as (
     select user_id, action
@@ -26,6 +26,29 @@ cnt_table as (
 
 select user_id, round(conf_cnt/req_cnt::numeric, 2) as confirmation_rate
 from cnt_table;
+
+-- ans2
+with RequestCount as (
+    select s.user_id, count(c.time_stamp)::numeric as requtest_count
+    from Signups s
+    left join Confirmations c
+    on s.user_id = c.user_id
+    group by s.user_id
+),
+
+ConfirmedCount as (
+    select user_id, count(user_id)::numeric as confirmed_count
+    from Confirmations
+    where action = 'confirmed'
+    group by user_id
+)
+
+select
+    r.user_id,
+    coalesce(round(confirmed_count/requtest_count, 2), 0) as confirmation_rate
+from RequestCount r
+left join ConfirmedCount c
+on r.user_id = c.user_id
 
 -- best
 SELECT 
