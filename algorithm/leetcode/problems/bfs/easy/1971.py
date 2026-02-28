@@ -29,3 +29,34 @@ class Solution:
                     visited.add(node)
                     queue.append(node)
         return False
+
+
+# again
+from collections import deque
+
+class Solution:
+    def validPath(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
+
+        if source == destination:
+            return True
+
+        adj = collections.defaultdict(list)
+
+        for u,v in edges:
+            adj[u].append(v)
+            adj[v].append(u)
+
+        visited = {source}
+        queue = deque([source])
+
+        while queue:
+            node = queue.popleft()
+            if node == destination:
+                return True
+
+            for adj_node in adj[node]:
+                if adj_node not in visited:
+                    visited.add(adj_node)
+                    queue.append(adj_node)
+        return False
+                

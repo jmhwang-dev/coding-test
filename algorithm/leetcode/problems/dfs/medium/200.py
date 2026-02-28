@@ -27,3 +27,63 @@ class Solution:
                     dfs(row, col)
 
         return result
+
+
+
+# again
+# bfs
+
+from collections import deque
+
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+
+        height, width = len(grid), len(grid[0])
+        moves = [[0,1], [1,0], [0,-1], [-1,0]]
+        queue = deque()
+        result = 0
+
+        for row in range(height):
+            for col in range(width):
+                if grid[row][col] == '1':
+                    queue.append([row, col])
+                    grid[row][col] = '0'
+                
+                    while queue:
+                        cur_row, cur_col = queue.popleft()
+
+                        for dx, dy in moves:
+                            new_row = cur_row + dx
+                            new_col = cur_col + dy
+                            if (0<=new_row<height) and (0<=new_col<width) and grid[new_row][new_col] == '1':
+                                grid[new_row][new_col] = '0'
+                                queue.append([new_row, new_col])
+                    result += 1
+        return result
+
+
+
+# dfs
+from collections import deque
+
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        height, width = len(grid), len(grid[0])
+        moves = [[0,1], [1,0], [0,-1], [-1, 0]]
+        def dfs(row, col):
+            
+            for dx, dy in moves:
+                new_row = row + dx
+                new_col = col + dy
+                if (0<=new_row<height) and (0<=new_col<width) and grid[new_row][new_col] == '1':
+                    grid[new_row][new_col] = '0'
+                    dfs(new_row, new_col)
+            return 1
+        result = 0
+        for row in range(height):
+            for col in range(width):
+                if grid[row][col] == '1':
+                    grid[row][col] = '0'
+                    result += dfs(row, col)
+
+        return result

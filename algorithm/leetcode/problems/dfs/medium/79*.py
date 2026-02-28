@@ -70,3 +70,38 @@ class Solution:
                         return True
 
         return False
+
+
+# again
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+
+        height, width = len(board), len(board[0])
+        moves = [[0,1], [1,0], [0,-1], [-1, 0]]
+        len_word = len(word)
+
+        def dfs(row, col, index):
+
+            if index == len_word:
+                return True
+
+            if word[index] != board[row][col]:
+                return False
+            
+            tmp = board[row][col]
+            board[row][col] = '#'
+            for dx, dy in moves:
+                new_row = row + dx
+                new_col = col + dy
+            
+                if (0<=new_row<height) and (0<=new_col<width):
+                    if dfs(new_row, new_col, index+1): return True
+
+            board[row][col] = tmp
+            return False
+
+        for row in range(height):
+            for col in range(width):
+                if board[row][col] == word[0]:
+                    if dfs(row, col, 0): return True
+        return False

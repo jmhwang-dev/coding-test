@@ -38,3 +38,35 @@ class Solution:
                 result = max(result, area)
 
         return result
+
+
+# again
+from collections import deque
+
+class Solution:
+    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+        
+        height, width = len(grid), len(grid[0])
+        moves = [[0,1], [1,0], [0,-1], [-1, 0]]
+        queue = deque()
+        result = 0
+        for row in range(height):
+            for col in range(width):
+                if grid[row][col] != 1:
+                    continue
+
+                area = 0
+                grid[row][col] = 0
+                queue.append([row, col])
+
+                while queue:
+                    cur_row, cur_col = queue.popleft()
+                    area += 1
+                    for dx, dy in moves:
+                        new_row = cur_row + dx
+                        new_col = cur_col + dy
+                        if (0<=new_row<height) and (0<=new_col<width) and grid[new_row][new_col] == 1:
+                            grid[new_row][new_col] = 0
+                            queue.append([new_row, new_col])
+                result = max(result, area)
+        return result

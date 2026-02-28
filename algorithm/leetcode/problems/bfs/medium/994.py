@@ -74,3 +74,45 @@ class Solution:
                     rotten_oranges.append([adj_row, adj_col])
             result += 1
         return result if fresh_orange_count == 0 else -1
+
+
+# again
+from collections import deque
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        
+        queue = deque()
+        fresh_orange_cnt = 0
+        height = len(grid)
+        width = len(grid[0])
+        time = 0
+
+        for row in range(height):
+            for col in range(width):
+                if grid[row][col] == 2:
+                    queue.append([row, col])
+                if grid[row][col] == 1:
+                    fresh_orange_cnt += 1
+
+        if fresh_orange_cnt == 0:
+            return time
+
+        moves = [[0,1], [1,0], [0,-1], [-1, 0]]
+        while queue and fresh_orange_cnt > 0:
+            curr_period = len(queue)
+            for _ in range(curr_period):
+                cur_row, cur_col = queue.popleft()
+                grid[cur_row][cur_col] = 0
+                for dx, dy in moves:
+
+                    adj_row = cur_row+dx
+                    adj_col = cur_col+dy
+                    if not (0 <= adj_row < height) or not (0 <= adj_col < width):
+                        continue
+                    if grid[adj_row][adj_col] == 1:
+                        queue.append([adj_row, adj_col])
+                        grid[adj_row][adj_col] = 0
+                        fresh_orange_cnt -= 1
+            time += 1
+        return -1 if fresh_orange_cnt > 0 else time
