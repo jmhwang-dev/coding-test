@@ -92,3 +92,88 @@ if __name__=="__main__":
         # print('curr_size:', curr_size, 'curr_eat:', curr_eat, 'result:', result, 'shark_pos:', shark_pos)
     
     print(result)   # 60
+
+
+### best
+
+
+import sys
+from collections import deque
+
+input = sys.stdin.readline
+
+N = int(input())
+BOARD = [list(map(int, input().split())) for _ in range(N)]
+moves = [(-1, 0), (0, -1), (1, 0), (0, 1)] # 상, 좌, 하, 우
+
+# 1. 상어 초기 위치 찾기 및 보드 초기화
+shark_r, shark_c = 0, 0
+for i in range(N):
+    for j in range(N):
+        if BOARD[i][j] == 9:
+            shark_r, shark_c = i, j
+            BOARD[i][j] = 0
+
+curr_size = 2
+curr_eat = 0
+total_time = 0
+
+def find_best_fish(start_r, start_c, size):
+    visited = [[False] * N for _ in range(N)]
+    queue = deque([(0, start_r, start_c)])
+    visited[start_r][start_c] = True
+    
+    candidates = []
+    min_dist = float('inf')
+    
+    while queue:
+        dist, r, c = queue.popleft()
+        
+        # [핵심 최적화 1] 이미 찾은 물고기보다 거리가 멀어지면 탐색 즉시 중단
+        if dist > min_dist:
+            break
+            
+        for dr, dc in moves:
+            nr, nc = r + dr, c + dc
+            
+            if 0 <= nr < N and 0 <= nc < N and not visited[nr][nc]:
+                # 지나갈 수 있는 조건: 물고기가 상어 크기 이하이거나 빈 칸
+                if BOARD[nr][nc] <= size:
+                    visited[nr][nc] = True
+                    
+                    # [핵심 최적화 2] in 연산자 없이 보드 값만으로 1번의 연산에 확인
+                    if 0 < BOARD[nr][nc] < size:
+                        min_dist = dist # 첫 물고기를 찾은 시점의 거리를 최단 거리로 고정
+                        candidates.append((nr, nc))
+                    else:
+                        # 먹을 수는 없지만 지나갈 수 있다면 큐에 추가 (최단 거리가 갱신되지 않았을 때만)
+                        queue.append((dist + 1, nr, nc))
+                        
+    if not candidates:
+        return None
+        
+    # 같은 최단 거리 내에서 가장 위, 가장 왼쪽 기준 정렬 (행 오름차순, 열 오름차순)
+    candidates.sort()
+    best_r, best_c = candidates[0]
+    return (min_dist + 1, best_r, best_c)
+
+# 메인 시뮬레이션 루프
+while True:
+    result = find_best_fish(shark_r, shark_c, curr_size)
+    
+    if result is None: # 더 이상 먹을 수 있는 물고기가 없음 (고립 상태 포함)
+        break
+        
+    time_taken, fish_r, fish_c = result
+    
+    # 상어 상태 업데이트
+    total_time += time_taken
+    curr_eat += 1
+    if curr_eat == curr_size:
+        curr_size += 1
+        curr_eat = 0
+        
+    BOARD[fish_r][fish_c] = 0 # 물고기 먹음
+    shark_r, shark_c = fish_r, fish_c # 상어 이동
+
+print(total_time)
